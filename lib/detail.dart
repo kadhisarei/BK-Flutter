@@ -20,7 +20,7 @@ class _DetailPageState extends State<DetailPage> {
               child: Padding(
                 padding: EdgeInsets.symmetric(
                   horizontal: 20.0,
-                  vertical: 80.0,
+                  vertical: 76.8,
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -29,7 +29,8 @@ class _DetailPageState extends State<DetailPage> {
                       'Details',
                       style: TextStyle(
                         color: Colors.white,
-                        fontSize: 25.0,
+                        fontSize: 24.0,
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
                     SizedBox(height: 40.0),
@@ -50,14 +51,17 @@ class _DetailPageState extends State<DetailPage> {
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text('Pilihan Konseling', style: TextStyle(fontSize: 15.0)),
+                              Text('Pilihan Konseling',
+                                  style: TextStyle(fontSize: 15.0)),
                               SizedBox(height: 10.0),
                               SingleChildScrollView(
                                 child: Wrap(
                                   children: [
                                     Padding(
-                                      padding: EdgeInsets.fromLTRB(10.0, 0.0, 0.0, 0.0),
-                                      child: Text('This is a longer sentence that should wrap instead of overflowing.'),
+                                      padding: EdgeInsets.fromLTRB(
+                                          10.0, 0.0, 0.0, 0.0),
+                                      child: Text(
+                                          'This is a longer sentence that should wrap instead of overflowing.'),
                                     ),
                                   ],
                                 ),
@@ -75,14 +79,17 @@ class _DetailPageState extends State<DetailPage> {
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text('Pilihan Konseling', style: TextStyle(fontSize: 15.0)),
+                              Text('Pilihan Konseling',
+                                  style: TextStyle(fontSize: 15.0)),
                               SizedBox(height: 10.0),
                               SingleChildScrollView(
                                 child: Wrap(
                                   children: [
                                     Padding(
-                                      padding: EdgeInsets.fromLTRB(10.0, 0.0, 0.0, 0.0),
-                                      child: Text('Another longer sentence that should wrap instead of overflowing.'),
+                                      padding: EdgeInsets.fromLTRB(
+                                          10.0, 0.0, 0.0, 0.0),
+                                      child: Text(
+                                          'Another longer sentence that should wrap instead of overflowing.'),
                                     ),
                                   ],
                                 ),
@@ -100,14 +107,17 @@ class _DetailPageState extends State<DetailPage> {
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text('Pilihan Konseling', style: TextStyle(fontSize: 15.0)),
+                              Text('Pilihan Konseling',
+                                  style: TextStyle(fontSize: 15.0)),
                               SizedBox(height: 10.0),
                               SingleChildScrollView(
                                 child: Wrap(
                                   children: [
                                     Padding(
-                                      padding: EdgeInsets.fromLTRB(10.0, 0.0, 0.0, 0.0),
-                                      child: Text('A third longer sentence that should wrap instead of overflowing.'),
+                                      padding: EdgeInsets.fromLTRB(
+                                          10.0, 0.0, 0.0, 0.0),
+                                      child: Text(
+                                          'A third longer sentence that should wrap instead of overflowing.'),
                                     ),
                                   ],
                                 ),

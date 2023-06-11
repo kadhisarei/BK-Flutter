@@ -2,7 +2,7 @@ import 'package:bk_flutter/home.dart';
 import 'package:flutter/material.dart';
 
 class LoginPage extends StatefulWidget {
-  const LoginPage({super.key});
+  const LoginPage({Key? key}) : super(key: key);
 
   @override
   State<LoginPage> createState() => _LoginPageState();
@@ -25,41 +25,44 @@ class _LoginPageState extends State<LoginPage> {
                   children: [
                     Positioned(
                       child: Container(
-                        height: 350,
+                        height: constraints.maxHeight * 0.4,
                         color: Color.fromARGB(255, 49, 78, 207),
                       ),
                     ),
                     Positioned(
-                      top: 80,
-                      left: 20,
+                      top: constraints.maxHeight * 0.07,
+                      left: constraints.maxWidth * 0.05,
                       child: Image.asset(
                         'assets/images/Logo.png',
-                        scale: 2,
+                        scale: constraints.maxWidth * 0.004,
                       ),
                     ),
                     Positioned(
-                      top: 110,
-                      right: 20,
+                      top: constraints.maxHeight * 0.1,
+                      right: constraints.maxWidth * 0.05,
                       child: Image.asset(
                         'assets/images/Coffee.png',
-                        height: 150,
+                        height: constraints.maxHeight * 0.25,
                       ),
                     ),
                     Positioned(
-                      top: 210,
-                      left: 20,
+                      top: constraints.maxHeight * 0.2,
+                      left: constraints.maxWidth * 0.05,
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
                             'SIGN IN',
-                            style: TextStyle(color: Colors.white, fontSize: 36),
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: constraints.maxWidth * 0.065,
+                            ),
                           ),
                           Text(
                             'To Your Account',
                             style: TextStyle(
                               color: Colors.white,
-                              fontSize: 24,
+                              fontSize: constraints.maxWidth * 0.04,
                               fontWeight: FontWeight.w100,
                             ),
                           ),
@@ -69,35 +72,44 @@ class _LoginPageState extends State<LoginPage> {
                     Form(
                       key: _formKey,
                       child: Container(
-                        padding: EdgeInsets.fromLTRB(35, 370, 35, 0),
+                        padding: EdgeInsets.fromLTRB(
+                          constraints.maxWidth * 0.1,
+                          constraints.maxHeight * 0.43,
+                          constraints.maxWidth * 0.1,
+                          0,
+                        ),
                         child: Column(
                           children: [
                             TextFormField(
                               style: TextStyle(fontSize: 10),
                               decoration: InputDecoration(
                                 border: OutlineInputBorder(
-                                  borderSide:
-                                      BorderSide(width: 3, color: Colors.black),
+                                  borderSide: BorderSide(
+                                    width: constraints.maxWidth * 0.007,
+                                    color: Colors.black,
+                                  ),
                                   borderRadius: BorderRadius.circular(15),
                                 ),
                                 hintText: 'Enter Your Email',
                                 labelText: 'Email',
                               ),
                             ),
-                            SizedBox(height: 20),
+                            SizedBox(height: constraints.maxHeight * 0.03),
                             TextFormField(
                               style: TextStyle(fontSize: 10),
                               decoration: InputDecoration(
                                 border: OutlineInputBorder(
-                                  borderSide:
-                                      BorderSide(width: 3, color: Colors.black),
+                                  borderSide: BorderSide(
+                                    width: constraints.maxWidth * 0.007,
+                                    color: Colors.black,
+                                  ),
                                   borderRadius: BorderRadius.circular(15),
                                 ),
                                 hintText: 'Enter Your Password',
                                 labelText: 'Password',
                               ),
                             ),
-                            SizedBox(height: 50),
+                            SizedBox(height: constraints.maxHeight * 0.07),
                             ElevatedButton(
                               onPressed: () {
                                 Navigator.pushReplacement(
@@ -116,7 +128,9 @@ class _LoginPageState extends State<LoginPage> {
                               ),
                               child: Padding(
                                 padding: EdgeInsets.symmetric(
-                                    horizontal: 40, vertical: 15),
+                                  horizontal: constraints.maxWidth * 0.17,
+                                  vertical: constraints.maxHeight * 0.025,
+                                ),
                                 child: Text('LOGIN'),
                               ),
                             ),
