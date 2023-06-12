@@ -1,15 +1,49 @@
+import 'dart:convert';
+
 import 'package:bk_flutter/home.dart';
+import 'package:bk_flutter/master.dart';
+import 'package:bk_flutter/method/api.dart';
 import 'package:flutter/material.dart';
+import 'package:bk_flutter/helper/constant.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginPage extends StatefulWidget {
-  const LoginPage({Key? key}) : super(key: key);
+  const LoginPage({super.key});
 
   @override
   State<LoginPage> createState() => _LoginPageState();
 }
 
 class _LoginPageState extends State<LoginPage> {
+  TextEditingController email = TextEditingController();
+  TextEditingController password = TextEditingController();
   final _formKey = GlobalKey<FormState>();
+
+  void loginUser() async {
+    final data = {
+      'email': email.text.toString(),
+      'password': password.text.toString(),
+    };
+    final result = await API().postRequest(route: '/login', data: data);
+    final response = jsonDecode(result.body);
+    if (response['status'] == 200) {
+      SharedPreferences preferences = await SharedPreferences.getInstance();
+      await preferences.setInt('user_id', response['user']['id']);
+      await preferences.setString('name', response['user']['name']);
+      await preferences.setString('email', response['user']['email']);
+      await preferences.setString('token', response['token']);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(response['message']),
+        ),
+      );
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(
+          builder: (context) => HistoryPage(),
+        ),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -81,6 +115,7 @@ class _LoginPageState extends State<LoginPage> {
                         child: Column(
                           children: [
                             TextFormField(
+                              controller: email,
                               style: TextStyle(fontSize: 10),
                               decoration: InputDecoration(
                                 border: OutlineInputBorder(
@@ -96,6 +131,8 @@ class _LoginPageState extends State<LoginPage> {
                             ),
                             SizedBox(height: constraints.maxHeight * 0.03),
                             TextFormField(
+                              obscureText: true,
+                              controller: password,
                               style: TextStyle(fontSize: 10),
                               decoration: InputDecoration(
                                 border: OutlineInputBorder(
@@ -112,12 +149,7 @@ class _LoginPageState extends State<LoginPage> {
                             SizedBox(height: constraints.maxHeight * 0.07),
                             ElevatedButton(
                               onPressed: () {
-                                Navigator.pushReplacement(
-                                  context,
-                                  MaterialPageRoute(builder: (context) {
-                                    return HistoryPage();
-                                  }),
-                                );
+                                loginUser();
                               },
                               style: ElevatedButton.styleFrom(
                                 backgroundColor:
