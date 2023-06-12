@@ -1,5 +1,7 @@
 import 'package:bk_flutter/detail.dart';
+import 'package:bk_flutter/login.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class HistoryPage extends StatefulWidget {
   @override
@@ -7,6 +9,31 @@ class HistoryPage extends StatefulWidget {
 }
 
 class _HistoryPageState extends State<HistoryPage> {
+  late SharedPreferences preferences;
+  bool isloading = false;
+  @override
+  void initState() {
+    super.initState();
+    getuserData();
+  }
+
+  void getuserData() async {
+    setState(() {
+      isloading = true;
+    });
+    preferences = await SharedPreferences.getInstance();
+    setState(() {
+      isloading = false;
+    });
+  }
+
+  void logout() {
+    preferences.clear();
+    Navigator.of(context).pushReplacement(
+      MaterialPageRoute(builder: (context) => LoginPage()),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -25,27 +52,36 @@ class _HistoryPageState extends State<HistoryPage> {
                 SizedBox(height: 16.0),
                 Container(
                   margin: EdgeInsets.fromLTRB(16, 0, 16, 0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Home',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 24.0,
-                          fontWeight: FontWeight.bold,
+                  child: isloading
+                      ? const Center(
+                          child: CircularProgressIndicator(),
+                        )
+                      : Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Home',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 24.0,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            ElevatedButton(
+                                onPressed: () {
+                                  logout();
+                                },
+                                child: Text('logout')),
+                            SizedBox(height: 16.0),
+                            Text(
+                              'Welcome ${preferences.getString('name').toString()}',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 16.0,
+                              ),
+                            ),
+                          ],
                         ),
-                      ),
-                      SizedBox(height: 16.0),
-                      Text(
-                        'Welcome User Alpha',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 16.0,
-                        ),
-                      ),
-                    ],
-                  ),
                 ),
                 SizedBox(height: 30.0),
                 Expanded(
