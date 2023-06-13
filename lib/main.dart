@@ -38,6 +38,6 @@ class MyWidget extends StatelessWidget {
             splashTransition: SplashTransition.sizeTransition,
             pageTransitionType: PageTransitionType.fade,
           ),
-        ));
+        ),);
   }
 }
