@@ -24,7 +24,7 @@ class _LoginPageState extends State<LoginPage> {
       'email': email.text.toString(),
       'password': password.text.toString(),
     };
-    final result = await API().postRequest(route: '/login', data: data);
+    final result = await API().postRequest(route: '/auth/login', data: data);
     final response = jsonDecode(result.body);
     if (response['status'] == 200) {
       SharedPreferences preferences = await SharedPreferences.getInstance();
