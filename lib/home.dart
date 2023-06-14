@@ -81,7 +81,7 @@ class _HistoryPageState extends State<HistoryPage> {
                                       onPressed: () {
                                         logout();
                                       },
-                                      child: Text('logout')),
+                                      child: Text('Logout')),
                                   SizedBox(height: 16.0),
                                   Text(
                                     'Welcome ${preferences.getString('name').toString()}',
@@ -165,7 +165,7 @@ class _HistoryPageState extends State<HistoryPage> {
                                         MainAxisAlignment.spaceBetween,
                                     children: [
                                       Text(
-                                        'Ricky Rich M.Pd',
+                                        'Ricky Sudrajat M.Pd',
                                         style: TextStyle(
                                           color: Color.fromRGBO(52, 52, 52, 1),
                                           fontSize: 16.0,
