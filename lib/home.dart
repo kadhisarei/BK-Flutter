@@ -217,245 +217,252 @@ class _HistoryPageState extends State<HistoryPage> {
                           ),
                           width: double.infinity,
                           child: ListView.builder(
-  itemCount: histories.length,
-  itemBuilder: (context, index) {
-    History history = histories[index];
-    return GestureDetector(
-      onTap: () {
-        // Navigasi ke halaman detail jika item diklik
-        // Navigator.push(
-        //   context,
-        //   MaterialPageRoute(builder: (context) => DetailPage(history: history)),
-        // );
-      },
-      child: Container(
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10),
-        ),
-        width: double.infinity,
-        height: 100.0,
-        child: Row(
-          children: [
-            Expanded(
-              child: Container(
-                padding: EdgeInsets.all(10),
-                decoration: BoxDecoration(
-                  color: Color.fromARGB(255, 255, 255, 255),
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(10),
-                    bottomLeft: Radius.circular(10),
-                  ),
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      history.nama_bk,
-                      style: TextStyle(
-                        fontSize: 10,
-                        color: Color.fromRGBO(52, 52, 52, 1),
-                      ),
-                    ),
-                    SizedBox(height: 10),
-                    Text(
-                      history.nama_layanan,
-                      style: TextStyle(
-                        fontSize: 12,
-                        color: Color.fromARGB(255, 49, 78, 207),
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            Expanded(
-              child: Container(
-                decoration: BoxDecoration(
-                  color: Color.fromARGB(255, 49, 78, 207),
-                  borderRadius: BorderRadius.only(
-                    topRight: Radius.circular(10),
-                    bottomRight: Radius.circular(10),
-                  ),
-                ),
-                child: Center(
-                  child: Text(
-                    history.jam_mulai,
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 18,
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  },
-),
+                            itemCount: histories.length,
+                            itemBuilder: (context, index) {
+                              History history = histories[index];
+                              return GestureDetector(
+                                onTap: () {
+                                  // Navigasi ke halaman detail jika item diklik
+                                  // Navigator.push(
+                                  //   context,
+                                  //   MaterialPageRoute(builder: (context) => DetailPage(history: history)),
+                                  // );
+                                },
+                                child: Container(
+                                  margin: EdgeInsets.only(bottom: 10),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                  width: double.infinity,
+                                  height: 100.0,
+                                  child: Row(
+                                    children: [
+                                      Expanded(
+                                        child: Container(
+                                          padding: EdgeInsets.all(10),
+                                          decoration: BoxDecoration(
+                                            color: Color.fromARGB(
+                                                255, 255, 255, 255),
+                                            borderRadius: BorderRadius.only(
+                                              topLeft: Radius.circular(10),
+                                              bottomLeft: Radius.circular(10),
+                                            ),
+                                          ),
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              Text(
+                                                history.nama_bk,
+                                                style: TextStyle(
+                                                  fontSize: 10,
+                                                  color: Color.fromRGBO(
+                                                      52, 52, 52, 1),
+                                                ),
+                                              ),
+                                              SizedBox(height: 10),
+                                              Text(
+                                                history.nama_layanan,
+                                                style: TextStyle(
+                                                  fontSize: 12,
+                                                  color: Color.fromARGB(
+                                                      255, 49, 78, 207),
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                      Expanded(
+                                        child: Container(
+                                          decoration: BoxDecoration(
+                                            color: Color.fromARGB(
+                                                255, 49, 78, 207),
+                                            borderRadius: BorderRadius.only(
+                                              topRight: Radius.circular(10),
+                                              bottomRight: Radius.circular(10),
+                                            ),
+                                          ),
+                                          child: Center(
+                                            child: Text(
+                                              history.jam_mulai,
+                                              style: TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 18,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
 
-                        //   child: SingleChildScrollView(
-                        //     child: Column(
-                        //       crossAxisAlignment: CrossAxisAlignment.start,
-                        //       children: [
-                        //         GestureDetector(
-                        //           onTap: () {
-                        //             Navigator.push(
-                        //               context,
-                        //               MaterialPageRoute(
-                        //                   builder: (context) => DetailPage()),
-                        //             );
-                        //           },
-                        //           child: Container(
-                        //             decoration: BoxDecoration(
-                        //               borderRadius: BorderRadius.circular(10),
-                        //             ),
-                        //             width: double.infinity,
-                        //             height: 100.0,
-                        //             child: Row(
-                        //               children: [
-                        //                 Expanded(
-                        //                   child: Container(
-                        //                     padding: EdgeInsets.all(10),
-                        //                     decoration: BoxDecoration(
-                        //                       color: Color.fromARGB(
-                        //                           255, 255, 255, 255),
-                        //                       borderRadius: BorderRadius.only(
-                        //                         topLeft: Radius.circular(10),
-                        //                         bottomLeft: Radius.circular(10),
-                        //                       ),
-                        //                     ),
-                        //                     child: Column(
-                        //                       crossAxisAlignment:
-                        //                           CrossAxisAlignment.start,
-                        //                       mainAxisAlignment:
-                        //                           MainAxisAlignment.center,
-                        //                       children: [
-                        //                         Text(
-                        //                           'Cassandra Fitriani',
-                        //                           style: TextStyle(
-                        //                             fontSize: 10,
-                        //                             color: Color.fromRGBO(
-                        //                                 52, 52, 52, 1),
-                        //                           ),
-                        //                         ),
-                        //                         SizedBox(height: 10),
-                        //                         Text(
-                        //                           'Bimbingan Pribadi',
-                        //                           style: TextStyle(
-                        //                             fontSize: 12,
-                        //                             color: Color.fromARGB(
-                        //                                 255, 49, 78, 207),
-                        //                             fontWeight: FontWeight.bold,
-                        //                           ),
-                        //                         ),
-                        //                       ],
-                        //                     ),
-                        //                   ),
-                        //                 ),
-                        //                 Expanded(
-                        //                   child: Container(
-                        //                     decoration: BoxDecoration(
-                        //                       color: Color.fromARGB(
-                        //                           255, 49, 78, 207),
-                        //                       borderRadius: BorderRadius.only(
-                        //                         topRight: Radius.circular(10),
-                        //                         bottomRight:
-                        //                             Radius.circular(10),
-                        //                       ),
-                        //                     ),
-                        //                     child: Center(
-                        //                       child: Text(
-                        //                         '21/21/21',
-                        //                         style: TextStyle(
-                        //                           color: Colors.white,
-                        //                           fontSize: 18,
-                        //                         ),
-                        //                       ),
-                        //                     ),
-                        //                   ),
-                        //                 ),
-                        //               ],
-                        //             ),
-                        //           ),
-                        //         ),
-                        //         SizedBox(
-                        //           height: 20,
-                        //         ),
-                        //         Container(
-                        //           decoration: BoxDecoration(
-                        //               borderRadius: BorderRadius.circular(10)),
-                        //           width: double.infinity,
-                        //           height: 100.0,
-                        //           child: Row(
-                        //             children: [
-                        //               Expanded(
-                        //                 child: Container(
-                        //                   padding: EdgeInsets.all(10),
-                        //                   decoration: BoxDecoration(
-                        //                       color: Color.fromARGB(
-                        //                           255, 255, 255, 255),
-                        //                       borderRadius: BorderRadius.only(
-                        //                           topLeft: Radius.circular(10),
-                        //                           bottomLeft:
-                        //                               Radius.circular(10))),
-                        //                   child: Column(
-                        //                     crossAxisAlignment:
-                        //                         CrossAxisAlignment.start,
-                        //                     mainAxisAlignment:
-                        //                         MainAxisAlignment.center,
-                        //                     children: [
-                        //                       Text(
-                        //                         'Cassandra Fitriani',
-                        //                         style: TextStyle(
-                        //                             fontSize: 10,
-                        //                             color: Color.fromRGBO(
-                        //                                 52, 52, 52, 1)),
-                        //                       ),
-                        //                       SizedBox(
-                        //                         height: 10,
-                        //                       ),
-                        //                       Text(
-                        //                         'Bimbingan Pribadi',
-                        //                         style: TextStyle(
-                        //                             fontSize: 12,
-                        //                             color: Color.fromARGB(
-                        //                                 255, 49, 78, 207),
-                        //                             fontWeight:
-                        //                                 FontWeight.bold),
-                        //                       )
-                        //                     ],
-                        //                   ),
-                        //                 ),
-                        //               ),
-                        //               Expanded(
-                        //                 child: Container(
-                        //                   decoration: BoxDecoration(
-                        //                       color: Color.fromARGB(
-                        //                           255, 49, 78, 207),
-                        //                       borderRadius: BorderRadius.only(
-                        //                           topRight: Radius.circular(10),
-                        //                           bottomRight:
-                        //                               Radius.circular(10))),
-                        //                   child: Center(
-                        //                     child: Text(
-                        //                       '21/21/21',
-                        //                       style: TextStyle(
-                        //                           color: Colors.white,
-                        //                           fontSize: 18),
-                        //                     ),
-                        //                   ),
-                        //                 ),
-                        //               ),
-                        //             ],
-                        //           ),
-                        //         ),
-                        //       ],
-                        //     ),
-                        //   ),
+                          //   child: SingleChildScrollView(
+                          //     child: Column(
+                          //       crossAxisAlignment: CrossAxisAlignment.start,
+                          //       children: [
+                          //         GestureDetector(
+                          //           onTap: () {
+                          //             Navigator.push(
+                          //               context,
+                          //               MaterialPageRoute(
+                          //                   builder: (context) => DetailPage()),
+                          //             );
+                          //           },
+                          //           child: Container(
+                          //             decoration: BoxDecoration(
+                          //               borderRadius: BorderRadius.circular(10),
+                          //             ),
+                          //             width: double.infinity,
+                          //             height: 100.0,
+                          //             child: Row(
+                          //               children: [
+                          //                 Expanded(
+                          //                   child: Container(
+                          //                     padding: EdgeInsets.all(10),
+                          //                     decoration: BoxDecoration(
+                          //                       color: Color.fromARGB(
+                          //                           255, 255, 255, 255),
+                          //                       borderRadius: BorderRadius.only(
+                          //                         topLeft: Radius.circular(10),
+                          //                         bottomLeft: Radius.circular(10),
+                          //                       ),
+                          //                     ),
+                          //                     child: Column(
+                          //                       crossAxisAlignment:
+                          //                           CrossAxisAlignment.start,
+                          //                       mainAxisAlignment:
+                          //                           MainAxisAlignment.center,
+                          //                       children: [
+                          //                         Text(
+                          //                           'Cassandra Fitriani',
+                          //                           style: TextStyle(
+                          //                             fontSize: 10,
+                          //                             color: Color.fromRGBO(
+                          //                                 52, 52, 52, 1),
+                          //                           ),
+                          //                         ),
+                          //                         SizedBox(height: 10),
+                          //                         Text(
+                          //                           'Bimbingan Pribadi',
+                          //                           style: TextStyle(
+                          //                             fontSize: 12,
+                          //                             color: Color.fromARGB(
+                          //                                 255, 49, 78, 207),
+                          //                             fontWeight: FontWeight.bold,
+                          //                           ),
+                          //                         ),
+                          //                       ],
+                          //                     ),
+                          //                   ),
+                          //                 ),
+                          //                 Expanded(
+                          //                   child: Container(
+                          //                     decoration: BoxDecoration(
+                          //                       color: Color.fromARGB(
+                          //                           255, 49, 78, 207),
+                          //                       borderRadius: BorderRadius.only(
+                          //                         topRight: Radius.circular(10),
+                          //                         bottomRight:
+                          //                             Radius.circular(10),
+                          //                       ),
+                          //                     ),
+                          //                     child: Center(
+                          //                       child: Text(
+                          //                         '21/21/21',
+                          //                         style: TextStyle(
+                          //                           color: Colors.white,
+                          //                           fontSize: 18,
+                          //                         ),
+                          //                       ),
+                          //                     ),
+                          //                   ),
+                          //                 ),
+                          //               ],
+                          //             ),
+                          //           ),
+                          //         ),
+                          //         SizedBox(
+                          //           height: 20,
+                          //         ),
+                          //         Container(
+                          //           decoration: BoxDecoration(
+                          //               borderRadius: BorderRadius.circular(10)),
+                          //           width: double.infinity,
+                          //           height: 100.0,
+                          //           child: Row(
+                          //             children: [
+                          //               Expanded(
+                          //                 child: Container(
+                          //                   padding: EdgeInsets.all(10),
+                          //                   decoration: BoxDecoration(
+                          //                       color: Color.fromARGB(
+                          //                           255, 255, 255, 255),
+                          //                       borderRadius: BorderRadius.only(
+                          //                           topLeft: Radius.circular(10),
+                          //                           bottomLeft:
+                          //                               Radius.circular(10))),
+                          //                   child: Column(
+                          //                     crossAxisAlignment:
+                          //                         CrossAxisAlignment.start,
+                          //                     mainAxisAlignment:
+                          //                         MainAxisAlignment.center,
+                          //                     children: [
+                          //                       Text(
+                          //                         'Cassandra Fitriani',
+                          //                         style: TextStyle(
+                          //                             fontSize: 10,
+                          //                             color: Color.fromRGBO(
+                          //                                 52, 52, 52, 1)),
+                          //                       ),
+                          //                       SizedBox(
+                          //                         height: 10,
+                          //                       ),
+                          //                       Text(
+                          //                         'Bimbingan Pribadi',
+                          //                         style: TextStyle(
+                          //                             fontSize: 12,
+                          //                             color: Color.fromARGB(
+                          //                                 255, 49, 78, 207),
+                          //                             fontWeight:
+                          //                                 FontWeight.bold),
+                          //                       )
+                          //                     ],
+                          //                   ),
+                          //                 ),
+                          //               ),
+                          //               Expanded(
+                          //                 child: Container(
+                          //                   decoration: BoxDecoration(
+                          //                       color: Color.fromARGB(
+                          //                           255, 49, 78, 207),
+                          //                       borderRadius: BorderRadius.only(
+                          //                           topRight: Radius.circular(10),
+                          //                           bottomRight:
+                          //                               Radius.circular(10))),
+                          //                   child: Center(
+                          //                     child: Text(
+                          //                       '21/21/21',
+                          //                       style: TextStyle(
+                          //                           color: Colors.white,
+                          //                           fontSize: 18),
+                          //                     ),
+                          //                   ),
+                          //                 ),
+                          //               ),
+                          //             ],
+                          //           ),
+                          //         ),
+                          //       ],
+                          //     ),
+                          //   ),
                         ),
                       ),
                     ],
