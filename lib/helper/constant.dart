@@ -14,7 +14,7 @@ Color secondaryColor = HexColor('#1F7879');
 Color secondaryTextColor = HexColor('#658E92');
 
 // API Url
- String apiUrl='http://version-educators.at.ply.gg:42438/api';
+ String apiUrl='http://awards-reflected.gl.at.ply.gg:7703/api';
 
 spancer({
   double w = 0,

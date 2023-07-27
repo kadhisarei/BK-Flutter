@@ -17,7 +17,7 @@ Future<List<History>> getHistory() async {
 
   print(id);
 
-  String urlLocal = "http://version-educators.at.ply.gg:42438/api/history/$id";
+  String urlLocal = "http://awards-reflected.gl.at.ply.gg:7703/api/history/$id";
 
   var result = await http.get(Uri.parse(urlLocal));
 

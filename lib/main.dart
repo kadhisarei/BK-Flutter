@@ -1,4 +1,5 @@
 import 'package:bk_flutter/home.dart';
+import 'package:bk_flutter/jadwal.dart';
 import 'package:bk_flutter/master.dart';
 import 'package:flutter/material.dart';
 import 'package:animated_splash_screen/animated_splash_screen.dart';
@@ -34,7 +35,7 @@ class MyWidget extends StatelessWidget {
                 Image.asset('assets/images/Logo.png'),
               ],
             )),
-            nextScreen: HomePage(),
+            nextScreen: Jadwal(),
             splashTransition: SplashTransition.sizeTransition,
             pageTransitionType: PageTransitionType.fade,
           ),
