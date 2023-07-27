@@ -1,15 +1,8 @@
-import 'dart:convert';
-
-import 'package:bk_flutter/home.dart';
-import 'package:bk_flutter/master.dart';
-import 'package:bk_flutter/method/api.dart';
 import 'package:flutter/material.dart';
-import 'package:bk_flutter/helper/constant.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 
 class Jadwal extends StatefulWidget {
-  const Jadwal({super.key});
+  const Jadwal({Key? key}) : super(key: key);
 
   @override
   State<Jadwal> createState() => _JadwalState();
@@ -74,23 +67,24 @@ class _JadwalState extends State<Jadwal> {
                       ),
                     ),
                     Positioned(
-                        top: constraints.maxHeight * 0.14,
-                        left: constraints.maxWidth * 0.25,
-                        child: Column(
-                          children: [
-                            Image.asset(
-                              'assets/images/meeting.png',
-                              height: constraints.maxHeight * 0.20,
+                      top: constraints.maxHeight * 0.14,
+                      left: constraints.maxWidth * 0.25,
+                      child: Column(
+                        children: [
+                          Image.asset(
+                            'assets/images/meeting.png',
+                            height: constraints.maxHeight * 0.20,
+                          ),
+                          Text(
+                            'Arrange Meeting',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: constraints.maxWidth * 0.065,
                             ),
-                            Text(
-                              'Arrange Meeting',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: constraints.maxWidth * 0.065,
-                              ),
-                            )
-                          ],
-                        )),
+                          )
+                        ],
+                      ),
+                    ),
                     Form(
                       child: SingleChildScrollView(
                         padding: EdgeInsets.fromLTRB(
@@ -102,54 +96,54 @@ class _JadwalState extends State<Jadwal> {
                         child: Column(
                           children: [
                             DropdownButtonFormField(
-                                decoration: InputDecoration(
-                                  enabledBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(
-                                        color: Colors.black, width: 1),
-                                    borderRadius: BorderRadius.circular(20),
-                                  ),
-                                  border: OutlineInputBorder(
-                                    borderSide: BorderSide(
-                                        color: Colors.black, width: 1),
-                                    borderRadius: BorderRadius.circular(20),
-                                  ),
-                                  filled: true,
-                                  fillColor: Color.fromARGB(255, 255, 255, 255),
+                              decoration: InputDecoration(
+                                enabledBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                      color: Colors.black, width: 1),
+                                  borderRadius: BorderRadius.circular(20),
                                 ),
-                                dropdownColor:
-                                    Color.fromARGB(255, 255, 255, 255),
-                                value: selectedValue1,
-                                onChanged: (String? newValue) {
-                                  setState(() {
-                                    selectedValue1 = newValue!;
-                                  });
-                                },
-                                items: JenisLayanan),
+                                border: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                      color: Colors.black, width: 1),
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
+                                filled: true,
+                                fillColor: Color.fromARGB(255, 255, 255, 255),
+                              ),
+                              dropdownColor: Color.fromARGB(255, 255, 255, 255),
+                              value: selectedValue1,
+                              onChanged: (String? newValue) {
+                                setState(() {
+                                  selectedValue1 = newValue!;
+                                });
+                              },
+                              items: JenisLayanan,
+                            ),
                             SizedBox(height: constraints.maxHeight * 0.05),
                             DropdownButtonFormField(
-                                decoration: InputDecoration(
-                                  enabledBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(
-                                        color: Colors.black, width: 1),
-                                    borderRadius: BorderRadius.circular(20),
-                                  ),
-                                  border: OutlineInputBorder(
-                                    borderSide: BorderSide(
-                                        color: Colors.black, width: 1),
-                                    borderRadius: BorderRadius.circular(20),
-                                  ),
-                                  filled: true,
-                                  fillColor: Color.fromARGB(255, 255, 255, 255),
+                              decoration: InputDecoration(
+                                enabledBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                      color: Colors.black, width: 1),
+                                  borderRadius: BorderRadius.circular(20),
                                 ),
-                                dropdownColor:
-                                    Color.fromARGB(255, 255, 255, 255),
-                                value: selectedValue2,
-                                onChanged: (String? newValue) {
-                                  setState(() {
-                                    selectedValue2 = newValue!;
-                                  });
-                                },
-                                items: NamaTeman),
+                                border: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                      color: Colors.black, width: 1),
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
+                                filled: true,
+                                fillColor: Color.fromARGB(255, 255, 255, 255),
+                              ),
+                              dropdownColor: Color.fromARGB(255, 255, 255, 255),
+                              value: selectedValue2,
+                              onChanged: (String? newValue) {
+                                setState(() {
+                                  selectedValue2 = newValue!;
+                                });
+                              },
+                              items: NamaTeman,
+                            ),
                             SizedBox(height: constraints.maxHeight * 0.05),
                             Container(
                               width: double.infinity,
@@ -174,36 +168,43 @@ class _JadwalState extends State<Jadwal> {
                                   Row(
                                     children: [
                                       Expanded(
-                                          child: ElevatedButton(
-                                              style: ElevatedButton.styleFrom(
-                                                backgroundColor: Colors.white,
-                                                shape: RoundedRectangleBorder(
-                                                  borderRadius:
-                                                      BorderRadius.circular(10),
-                                                ),
-                                              ),
-                                              onPressed: () {
-                                                DatePicker.showDatePicker(
-                                                    context,
-                                                    showTitleActions: true,
-                                                    minTime:
-                                                        DateTime(2023, 1, 1),
-                                                    maxTime:
-                                                        DateTime(2025, 1, 1),
-                                                    onChanged: (date) {
-                                                  print('change $date');
-                                                }, onConfirm: (date) {
-                                                  print('confirm $date');
-                                                },
-                                                    currentTime: DateTime.now(),
-                                                    locale: LocaleType.id);
+                                        child: ElevatedButton(
+                                          style: ElevatedButton.styleFrom(
+                                            backgroundColor: Colors.white,
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(10),
+                                            ),
+                                          ),
+                                          onPressed: () {
+                                            DatePicker.showDatePicker(
+                                              context,
+                                              showTitleActions: true,
+                                              minTime: DateTime(2023, 1, 1),
+                                              maxTime: DateTime(2025, 1, 1),
+                                              onChanged: (date) {
+                                                print('change $date');
                                               },
-                                              child: Text(
-                                                'Buka Kalender',
-                                                style: TextStyle(
-                                                    color: Color.fromARGB(
-                                                        255, 0, 0, 0)),
-                                              ))),
+                                              onConfirm: (date) {
+                                                print('confirm $date');
+                                              },
+                                              currentTime: DateTime.now(),
+                                              locale: LocaleType.id,
+                                            );
+                                          },
+                                          child: Text(
+                                            'Buka Kalender',
+                                            style: TextStyle(
+                                              color: Color.fromARGB(
+                                                255,
+                                                0,
+                                                0,
+                                                0,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
                                     ],
                                   ),
                                 ],
@@ -289,8 +290,7 @@ class _JadwalState extends State<Jadwal> {
                               child: ElevatedButton(
                                 onPressed: () {},
                                 style: ElevatedButton.styleFrom(
-                                  backgroundColor:
-                                      Color.fromARGB(255, 255, 195, 3),
+                                  backgroundColor: Color.fromARGB(255, 255, 195, 3),
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(15),
                                   ),
