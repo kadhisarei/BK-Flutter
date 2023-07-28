@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
+import 'package:flutter_time_picker_spinner/flutter_time_picker_spinner.dart';
 
 class Jadwal extends StatefulWidget {
   const Jadwal({Key? key}) : super(key: key);
@@ -33,6 +34,8 @@ class _JadwalState extends State<Jadwal> {
     ];
     return menuItems;
   }
+
+  DateTime _dateTime = DateTime.now();
 
   @override
   void initState() {
@@ -98,13 +101,13 @@ class _JadwalState extends State<Jadwal> {
                             DropdownButtonFormField(
                               decoration: InputDecoration(
                                 enabledBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                      color: Colors.black, width: 1),
+                                  borderSide:
+                                      BorderSide(color: Colors.black, width: 1),
                                   borderRadius: BorderRadius.circular(20),
                                 ),
                                 border: OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                      color: Colors.black, width: 1),
+                                  borderSide:
+                                      BorderSide(color: Colors.black, width: 1),
                                   borderRadius: BorderRadius.circular(20),
                                 ),
                                 filled: true,
@@ -123,13 +126,13 @@ class _JadwalState extends State<Jadwal> {
                             DropdownButtonFormField(
                               decoration: InputDecoration(
                                 enabledBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                      color: Colors.black, width: 1),
+                                  borderSide:
+                                      BorderSide(color: Colors.black, width: 1),
                                   borderRadius: BorderRadius.circular(20),
                                 ),
                                 border: OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                      color: Colors.black, width: 1),
+                                  borderSide:
+                                      BorderSide(color: Colors.black, width: 1),
                                   borderRadius: BorderRadius.circular(20),
                                 ),
                                 filled: true,
@@ -205,6 +208,43 @@ class _JadwalState extends State<Jadwal> {
                                           ),
                                         ),
                                       ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ),
+                            SizedBox(height: constraints.maxHeight * 0.05),
+                            Container(
+                              width: double.infinity,
+                              height: 300,
+                              decoration: BoxDecoration(
+                                  color: Color.fromARGB(255, 49, 78, 207),
+                                  borderRadius: BorderRadius.circular(15)),
+                              padding: EdgeInsets.all(16),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Row(
+                                    children: [
+                                      Expanded(
+                                          child: TimePickerSpinner(
+                                        is24HourMode: false,
+                                        normalTextStyle: TextStyle(
+                                            fontSize: 18,
+                                            color: Color.fromARGB(
+                                                255, 255, 195, 3)),
+                                        highlightedTextStyle: TextStyle(
+                                            fontSize: 18, color: Colors.white),
+                                        spacing: 45,
+                                        itemHeight: 80,
+                                        isForce2Digits: true,
+                                        onTimeChange: (time) {
+                                          setState(() {
+                                            _dateTime = time;
+                                          });
+                                        },
+                                      )),
                                     ],
                                   ),
                                 ],
@@ -290,7 +330,8 @@ class _JadwalState extends State<Jadwal> {
                               child: ElevatedButton(
                                 onPressed: () {},
                                 style: ElevatedButton.styleFrom(
-                                  backgroundColor: Color.fromARGB(255, 255, 195, 3),
+                                  backgroundColor:
+                                      Color.fromARGB(255, 255, 195, 3),
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(15),
                                   ),
