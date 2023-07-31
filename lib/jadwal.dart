@@ -223,28 +223,54 @@ class _JadwalState extends State<Jadwal> {
                               padding: EdgeInsets.all(16),
                               child: Column(
                                 mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.center,
+                                // crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
                                   Row(
                                     children: [
                                       Expanded(
-                                          child: TimePickerSpinner(
-                                        is24HourMode: false,
-                                        normalTextStyle: TextStyle(
-                                            fontSize: 18,
-                                            color: Color.fromARGB(
-                                                255, 255, 195, 3)),
-                                        highlightedTextStyle: TextStyle(
-                                            fontSize: 18, color: Colors.white),
-                                        spacing: 45,
-                                        itemHeight: 80,
-                                        isForce2Digits: true,
-                                        onTimeChange: (time) {
-                                          setState(() {
-                                            _dateTime = time;
-                                          });
-                                        },
+                                          child: Container(
+                                        decoration: BoxDecoration(
+                                            color: Colors.white,
+                                            borderRadius:
+                                                BorderRadius.circular(15)),
+                                        child: TimePickerSpinner(
+                                          is24HourMode: true,
+                                          normalTextStyle: TextStyle(
+                                              fontSize: 20,
+                                              color: Colors.black),
+                                          highlightedTextStyle: TextStyle(
+                                              fontSize: 22,
+                                              color: Color.fromARGB(
+                                                  255, 49, 78, 207)),
+                                          spacing: 40,
+                                          itemHeight: 80,
+                                          alignment: Alignment.center,
+                                          isForce2Digits: true,
+                                          onTimeChange: (time) {
+                                            setState(() {
+                                              _dateTime = time;
+                                            });
+                                          },
+                                        ),
                                       )),
+                                      SizedBox(
+                                        width: 10,
+                                      ),
+                                      Text(
+                                        _dateTime.hour
+                                                .toString()
+                                                .padLeft(2, '0') +
+                                            ':' +
+                                            _dateTime.minute
+                                                .toString()
+                                                .padLeft(2, '0') +
+                                            ':' +
+                                            '00',
+                                        style: TextStyle(
+                                            fontSize: 24,
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.bold),
+                                      ),
                                     ],
                                   ),
                                 ],
