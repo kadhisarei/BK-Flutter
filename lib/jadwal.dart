@@ -1,6 +1,14 @@
+import 'package:bk_flutter/layanan.dart';
+import 'package:datetime_picker_formfield_new/datetime_picker_formfield.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
-import 'package:flutter_time_picker_spinner/flutter_time_picker_spinner.dart';
+// import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
+import 'package:flutter_datetime_picker_plus/flutter_datetime_picker_plus.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+import 'package:intl/intl.dart';
+import 'package:multi_select_flutter/multi_select_flutter.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'home.dart';
 
 class Jadwal extends StatefulWidget {
   const Jadwal({Key? key}) : super(key: key);
@@ -10,41 +18,74 @@ class Jadwal extends StatefulWidget {
 }
 
 class _JadwalState extends State<Jadwal> {
-  TextEditingController dateInput = TextEditingController();
+  final _formKey = GlobalKey<FormState>();
+  final String url = 'http://effective-ampland.gl.at.ply.gg:7440/api/create';
+  TextEditingController _tempat = TextEditingController();
+  TextEditingController _pesan = TextEditingController();
 
-  String selectedValue1 = "jenis";
-  List<DropdownMenuItem<String>> get JenisLayanan {
-    List<DropdownMenuItem<String>> menuItems = [
-      DropdownMenuItem(child: Text("Pilih Jenis Layanan"), value: "jenis"),
-      DropdownMenuItem(child: Text("Bimbingan Pribadi"), value: "Pribadi"),
-      DropdownMenuItem(child: Text("Bimbingan Belajar"), value: "Belajar"),
-      DropdownMenuItem(child: Text("Bimbingan Karir"), value: "Karir"),
-      DropdownMenuItem(child: Text("Bimbingan Sosial"), value: "Sosial"),
-    ];
-    return menuItems;
+  List<dynamic> jenisLayananList = [];
+  List<dynamic> siswaList = [];
+  List<String> jenisKarirList = ['Kuliah', 'Kompetisi', 'Bekerja'];
+  List<int> selectedSiswaIds = [];
+  DateTime? selectedDate;
+  DateTime? selectedTime;
+  int? selectedJenisLayananId;
+  String? selectedJenisKarir;
+
+  Future<String?> getBearerToken() async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    String? bearerToken = preferences.getString('token');
+    return bearerToken;
   }
 
-  String selectedValue2 = "Pilih Teman";
-  List<DropdownMenuItem<String>> get NamaTeman {
-    List<DropdownMenuItem<String>> menuItems = [
-      DropdownMenuItem(child: Text("Pilih Teman"), value: "Pilih Teman"),
-      DropdownMenuItem(child: Text("Placeholder"), value: "Placeholder"),
-      DropdownMenuItem(child: Text("Placeholder"), value: "Placeholder"),
-      DropdownMenuItem(child: Text("Placeholder"), value: "Placeholder"),
-    ];
-    return menuItems;
-  }
+  Future<void> getData() async {
+    try {
+      final String? bearerToken = await getBearerToken();
 
-  DateTime _dateTime = DateTime.now();
+      if (bearerToken == null) {
+        print('Bearer token is missing or null');
+        return;
+      }
+
+      final headers = {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'Authorization': 'Bearer $bearerToken',
+      };
+
+      var response = await http.get(Uri.parse(url), headers: headers);
+
+      if (response.statusCode == 200) {
+        Map<String, dynamic> responseData = json.decode(response.body);
+
+        if (responseData.containsKey('layananBK') &&
+            responseData.containsKey('siswa')) {
+          setState(() {
+            jenisLayananList = responseData['layananBK'];
+            siswaList = responseData['siswa'];
+          });
+        } else {
+          print('Response data does not contain expected keys.');
+        }
+      } else {
+        print('Failed to load data. Status code: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error: $e');
+    }
+  }
 
   @override
   void initState() {
-    dateInput.text = ""; //set the initial value of text field
     super.initState();
+    getData();
   }
 
   @override
   Widget build(BuildContext context) {
+    List<MultiSelectItem<int>> siswaMultiSelectItems = siswaList
+        .map((item) => MultiSelectItem<int>(item['id'], item['nama']))
+        .toList();
     return Scaffold(
       backgroundColor: Color.fromARGB(255, 255, 255, 255),
       body: LayoutBuilder(
@@ -58,12 +99,26 @@ class _JadwalState extends State<Jadwal> {
                     Positioned(
                       child: Container(
                         height: constraints.maxHeight * 0.4,
-                        color: Color.fromARGB(255, 49, 78, 207),
+                        decoration: BoxDecoration(
+                          color: Color.fromARGB(255, 49, 78, 207),
+                          borderRadius: BorderRadius.only(
+                            bottomLeft: Radius.circular(20),
+                            bottomRight: Radius.circular(20),
+                          ),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.25),
+                              offset: Offset(0, 4),
+                              blurRadius: 4,
+                              spreadRadius: 0,
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                     Positioned(
-                      top: constraints.maxHeight * 0.07,
-                      left: constraints.maxWidth * 0.05,
+                      top: constraints.maxHeight * 0.06,
+                      left: constraints.maxWidth * 0.33,
                       child: Image.asset(
                         'assets/images/Logo.png',
                         scale: constraints.maxWidth * 0.004,
@@ -81,6 +136,8 @@ class _JadwalState extends State<Jadwal> {
                           Text(
                             'Arrange Meeting',
                             style: TextStyle(
+                              fontFamily: 'Quicksand',
+                              fontWeight: FontWeight.bold,
                               color: Colors.white,
                               fontSize: constraints.maxWidth * 0.065,
                             ),
@@ -89,6 +146,7 @@ class _JadwalState extends State<Jadwal> {
                       ),
                     ),
                     Form(
+                      key: _formKey,
                       child: SingleChildScrollView(
                         padding: EdgeInsets.fromLTRB(
                           constraints.maxWidth * 0.1,
@@ -98,72 +156,86 @@ class _JadwalState extends State<Jadwal> {
                         ),
                         child: Column(
                           children: [
-                            DropdownButtonFormField(
-                              decoration: InputDecoration(
-                                enabledBorder: OutlineInputBorder(
-                                  borderSide:
-                                      BorderSide(color: Colors.black, width: 1),
-                                  borderRadius: BorderRadius.circular(20),
-                                ),
-                                border: OutlineInputBorder(
-                                  borderSide:
-                                      BorderSide(color: Colors.black, width: 1),
-                                  borderRadius: BorderRadius.circular(20),
-                                ),
-                                filled: true,
-                                fillColor: Color.fromARGB(255, 255, 255, 255),
-                              ),
-                              dropdownColor: Color.fromARGB(255, 255, 255, 255),
-                              value: selectedValue1,
-                              onChanged: (String? newValue) {
+                            DropdownButtonFormField<int>(
+                              value: selectedJenisLayananId,
+                              items:
+                                  jenisLayananList.map<DropdownMenuItem<int>>(
+                                (dynamic item) {
+                                  return DropdownMenuItem<int>(
+                                    value: item['id'],
+                                    child: Text(item['jenis_layanan']),
+                                  );
+                                },
+                              ).toList(),
+                              onChanged: (int? newValue) {
                                 setState(() {
-                                  selectedValue1 = newValue!;
+                                  selectedJenisLayananId = newValue!;
+                                  selectedSiswaIds.clear();
+                                  selectedJenisKarir = null;
                                 });
                               },
-                              items: JenisLayanan,
-                            ),
-                            SizedBox(height: constraints.maxHeight * 0.05),
-                            DropdownButtonFormField(
                               decoration: InputDecoration(
-                                enabledBorder: OutlineInputBorder(
-                                  borderSide:
-                                      BorderSide(color: Colors.black, width: 1),
-                                  borderRadius: BorderRadius.circular(20),
-                                ),
-                                border: OutlineInputBorder(
-                                  borderSide:
-                                      BorderSide(color: Colors.black, width: 1),
-                                  borderRadius: BorderRadius.circular(20),
-                                ),
-                                filled: true,
-                                fillColor: Color.fromARGB(255, 255, 255, 255),
+                                labelText: 'Pilih Jenis Layanan',
+                                border: OutlineInputBorder(),
                               ),
-                              dropdownColor: Color.fromARGB(255, 255, 255, 255),
-                              value: selectedValue2,
-                              onChanged: (String? newValue) {
-                                setState(() {
-                                  selectedValue2 = newValue!;
-                                });
-                              },
-                              items: NamaTeman,
                             ),
+                            if (selectedJenisLayananId == 3)
+                              SizedBox(height: constraints.maxHeight * 0.05),
+                            if (selectedJenisLayananId == 3)
+                              DropdownButtonFormField<String>(
+                                value: selectedJenisKarir,
+                                items: jenisKarirList
+                                    .map<DropdownMenuItem<String>>(
+                                  (String item) {
+                                    return DropdownMenuItem<String>(
+                                      value: item,
+                                      child: Text(item),
+                                    );
+                                  },
+                                ).toList(),
+                                onChanged: (String? newValue) {
+                                  setState(() {
+                                    selectedJenisKarir = newValue;
+                                  });
+                                },
+                                decoration: InputDecoration(
+                                  labelText: 'Pilih Jenis Karir',
+                                  border: OutlineInputBorder(),
+                                ),
+                              ),
+                            if (selectedJenisLayananId == 4)
+                              SizedBox(height: constraints.maxHeight * 0.05),
+                            if (selectedJenisLayananId == 4)
+                              MultiSelectDialogField(
+                                title: Text('Pilih Siswa'),
+                                items: siswaMultiSelectItems,
+                                listType: MultiSelectListType.CHIP,
+                                searchIcon: Icon(Icons.search),
+                                onConfirm: (List<int> values) {
+                                  setState(() {
+                                    selectedSiswaIds = values;
+                                  });
+                                },
+                              ),
                             SizedBox(height: constraints.maxHeight * 0.05),
                             Container(
                               width: double.infinity,
                               height: 150,
                               decoration: BoxDecoration(
-                                  color: Color.fromARGB(255, 49, 78, 207),
-                                  borderRadius: BorderRadius.circular(15)),
+                                color: Color.fromARGB(255, 49, 78, 207),
+                                borderRadius: BorderRadius.circular(15),
+                              ),
                               padding: EdgeInsets.all(16),
                               child: Column(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
                                   Text(
-                                    'Tanggal dan Waktu',
+                                    'Tanggal dan waktu',
                                     style: TextStyle(
+                                      fontFamily: 'Quicksand',
                                       fontSize: 18,
-                                      fontWeight: FontWeight.normal,
+                                      fontWeight: FontWeight.bold,
                                       color: Colors.white,
                                     ),
                                   ),
@@ -171,105 +243,75 @@ class _JadwalState extends State<Jadwal> {
                                   Row(
                                     children: [
                                       Expanded(
-                                        child: ElevatedButton(
-                                          style: ElevatedButton.styleFrom(
-                                            backgroundColor: Colors.white,
-                                            shape: RoundedRectangleBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(10),
-                                            ),
-                                          ),
-                                          onPressed: () {
+                                        child: TextFormField(
+                                          readOnly: true,
+                                          onTap: () {
                                             DatePicker.showDatePicker(
                                               context,
                                               showTitleActions: true,
-                                              minTime: DateTime(2023, 1, 1),
-                                              maxTime: DateTime(2025, 1, 1),
+                                              minTime: DateTime(2000, 1, 1),
+                                              maxTime: DateTime(2100, 12, 31),
                                               onChanged: (date) {
                                                 print('change $date');
                                               },
                                               onConfirm: (date) {
+                                                setState(() {
+                                                  selectedDate = date;
+                                                });
                                                 print('confirm $date');
                                               },
-                                              currentTime: DateTime.now(),
-                                              locale: LocaleType.id,
+                                              currentTime: selectedDate,
+                                              locale: LocaleType.en,
                                             );
                                           },
-                                          child: Text(
-                                            'Buka Kalender',
-                                            style: TextStyle(
-                                              color: Color.fromARGB(
-                                                255,
-                                                0,
-                                                0,
-                                                0,
-                                              ),
+                                          controller: TextEditingController(
+                                            text: selectedDate != null
+                                                ? DateFormat('yyyy-MM-dd')
+                                                    .format(selectedDate!)
+                                                : '',
+                                          ),
+                                          decoration: InputDecoration(
+                                            hintText: 'dd/mm/yy',
+                                            fillColor: Colors.white,
+                                            filled: true,
+                                            border: OutlineInputBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(15),
                                             ),
                                           ),
                                         ),
                                       ),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                            ),
-                            SizedBox(height: constraints.maxHeight * 0.05),
-                            Container(
-                              width: double.infinity,
-                              height: 300,
-                              decoration: BoxDecoration(
-                                  color: Color.fromARGB(255, 49, 78, 207),
-                                  borderRadius: BorderRadius.circular(15)),
-                              padding: EdgeInsets.all(16),
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                // crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Row(
-                                    children: [
+                                      SizedBox(width: 5),
                                       Expanded(
-                                          child: Container(
-                                        decoration: BoxDecoration(
-                                            color: Colors.white,
-                                            borderRadius:
-                                                BorderRadius.circular(15)),
-                                        child: TimePickerSpinner(
-                                          is24HourMode: true,
-                                          normalTextStyle: TextStyle(
-                                              fontSize: 20,
-                                              color: Colors.black),
-                                          highlightedTextStyle: TextStyle(
-                                              fontSize: 22,
-                                              color: Color.fromARGB(
-                                                  255, 49, 78, 207)),
-                                          spacing: 40,
-                                          itemHeight: 80,
-                                          alignment: Alignment.center,
-                                          isForce2Digits: true,
-                                          onTimeChange: (time) {
+                                        child: DateTimeField(
+                                          format: DateFormat('HH:mm'),
+                                          decoration: InputDecoration(
+                                            hintText: '--:--',
+                                            fillColor: Colors.white,
+                                            filled: true,
+                                            border: OutlineInputBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(15),
+                                            ),
+                                            alignLabelWithHint: true,
+                                          ),
+                                          onChanged: (time) {
                                             setState(() {
-                                              _dateTime = time;
+                                              selectedTime = time;
                                             });
                                           },
+                                          onShowPicker:
+                                              (context, currentValue) async {
+                                            final time = await showTimePicker(
+                                              context: context,
+                                              initialTime:
+                                                  TimeOfDay.fromDateTime(
+                                                currentValue ?? DateTime.now(),
+                                              ),
+                                            );
+                                            return DateTimeField.convert(time);
+                                          },
                                         ),
-                                      )),
-                                      SizedBox(
-                                        width: 10,
-                                      ),
-                                      Text(
-                                        _dateTime.hour
-                                                .toString()
-                                                .padLeft(2, '0') +
-                                            ':' +
-                                            _dateTime.minute
-                                                .toString()
-                                                .padLeft(2, '0') +
-                                            ':' +
-                                            '00',
-                                        style: TextStyle(
-                                            fontSize: 24,
-                                            color: Colors.white,
-                                            fontWeight: FontWeight.bold),
                                       ),
                                     ],
                                   ),
@@ -281,8 +323,9 @@ class _JadwalState extends State<Jadwal> {
                               width: double.infinity,
                               height: 150,
                               decoration: BoxDecoration(
-                                  color: Color.fromARGB(255, 49, 78, 207),
-                                  borderRadius: BorderRadius.circular(15)),
+                                color: Color.fromARGB(255, 49, 78, 207),
+                                borderRadius: BorderRadius.circular(15),
+                              ),
                               padding: EdgeInsets.all(16),
                               child: Column(
                                 mainAxisAlignment: MainAxisAlignment.center,
@@ -291,8 +334,9 @@ class _JadwalState extends State<Jadwal> {
                                   Text(
                                     'Tempat Konseling',
                                     style: TextStyle(
+                                      fontFamily: 'Quicksand',
                                       fontSize: 18,
-                                      fontWeight: FontWeight.normal,
+                                      fontWeight: FontWeight.bold,
                                       color: Colors.white,
                                     ),
                                   ),
@@ -300,10 +344,15 @@ class _JadwalState extends State<Jadwal> {
                                   Row(
                                     children: [
                                       Expanded(
-                                        child: TextField(
+                                        child: TextFormField(
+                                          controller: _tempat,
                                           decoration: InputDecoration(
-                                            labelText: 'Masukan Lokasi...',
+                                            border: OutlineInputBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(15),
+                                            ),
                                             fillColor: Colors.white,
+                                            hintText: 'Masukan Lokasi',
                                             filled: true,
                                           ),
                                         ),
@@ -318,8 +367,9 @@ class _JadwalState extends State<Jadwal> {
                               width: double.infinity,
                               height: 150,
                               decoration: BoxDecoration(
-                                  color: Color.fromARGB(255, 49, 78, 207),
-                                  borderRadius: BorderRadius.circular(15)),
+                                color: Color.fromARGB(255, 49, 78, 207),
+                                borderRadius: BorderRadius.circular(15),
+                              ),
                               padding: EdgeInsets.all(16),
                               child: Column(
                                 mainAxisAlignment: MainAxisAlignment.center,
@@ -328,8 +378,9 @@ class _JadwalState extends State<Jadwal> {
                                   Text(
                                     'Topik Pembicaraan',
                                     style: TextStyle(
+                                      fontFamily: 'Quicksand',
                                       fontSize: 18,
-                                      fontWeight: FontWeight.normal,
+                                      fontWeight: FontWeight.bold,
                                       color: Colors.white,
                                     ),
                                   ),
@@ -337,10 +388,15 @@ class _JadwalState extends State<Jadwal> {
                                   Row(
                                     children: [
                                       Expanded(
-                                        child: TextField(
+                                        child: TextFormField(
+                                          controller: _pesan,
                                           decoration: InputDecoration(
-                                            labelText: 'Masukan Topik...',
+                                            border: OutlineInputBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(15),
+                                            ),
                                             fillColor: Colors.white,
+                                            hintText: 'Masukan Topik',
                                             filled: true,
                                           ),
                                         ),
@@ -351,25 +407,247 @@ class _JadwalState extends State<Jadwal> {
                               ),
                             ),
                             SizedBox(height: constraints.maxHeight * 0.07),
-                            SizedBox(
-                              width: double.infinity,
-                              child: ElevatedButton(
-                                onPressed: () {},
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor:
-                                      Color.fromARGB(255, 255, 195, 3),
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(15),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                ElevatedButton(
+                                  onPressed: () {
+                                    Navigator.pop(context);
+                                  },
+                                  style: ElevatedButton.styleFrom(
+                                    primary: Color.fromARGB(255, 255, 195, 3),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(15),
+                                    ),
+                                  ),
+                                  child: Padding(
+                                    padding: EdgeInsets.symmetric(
+                                      horizontal: constraints.maxWidth * 0.09,
+                                      vertical: constraints.maxHeight * 0.02,
+                                    ),
+                                    child: Text('Cancel'),
                                   ),
                                 ),
-                                child: Padding(
-                                  padding: EdgeInsets.symmetric(
-                                    horizontal: constraints.maxWidth * 0.15,
-                                    vertical: constraints.maxHeight * 0.02,
+                                ElevatedButton(
+                                  onPressed: () async {
+                                    if (selectedJenisLayananId == null) {
+                                      showDialog(
+                                        context: context,
+                                        builder: (context) {
+                                          return AlertDialog(
+                                            title: Text('Validation Error'),
+                                            content:
+                                                Text('Pilih Jenis Layanan.'),
+                                            actions: [
+                                              TextButton(
+                                                onPressed: () {
+                                                  Navigator.pop(context);
+                                                },
+                                                child: Text('OK'),
+                                              ),
+                                            ],
+                                          );
+                                        },
+                                      );
+                                      return;
+                                    }
+
+                                    if (selectedJenisLayananId == 4 &&
+                                        selectedSiswaIds.isEmpty) {
+                                      showDialog(
+                                        context: context,
+                                        builder: (context) {
+                                          return AlertDialog(
+                                            title: Text('Validation Error'),
+                                            content: Text(
+                                                'Pilih setidaknya satu siswa.'),
+                                            actions: [
+                                              TextButton(
+                                                onPressed: () {
+                                                  Navigator.pop(context);
+                                                },
+                                                child: Text('OK'),
+                                              ),
+                                            ],
+                                          );
+                                        },
+                                      );
+                                      return;
+                                    }
+
+                                    if (selectedJenisLayananId == 3 &&
+                                        selectedJenisKarir == null) {
+                                      showDialog(
+                                        context: context,
+                                        builder: (context) {
+                                          return AlertDialog(
+                                            title: Text('Validation Error'),
+                                            content: Text('Pilih satu.'),
+                                            actions: [
+                                              TextButton(
+                                                onPressed: () {
+                                                  Navigator.pop(context);
+                                                },
+                                                child: Text('OK'),
+                                              ),
+                                            ],
+                                          );
+                                        },
+                                      );
+                                      return;
+                                    }
+
+                                    if (selectedDate == null ||
+                                        selectedTime == null) {
+                                      showDialog(
+                                        context: context,
+                                        builder: (context) {
+                                          return AlertDialog(
+                                            title: Text('Validation Error'),
+                                            content: Text(
+                                                'Pilih tanggal dan waktu konseling.'),
+                                            actions: [
+                                              TextButton(
+                                                onPressed: () {
+                                                  Navigator.pop(context);
+                                                },
+                                                child: Text('OK'),
+                                              ),
+                                            ],
+                                          );
+                                        },
+                                      );
+                                      return;
+                                    }
+
+                                    if (_tempat.text.isEmpty) {
+                                      showDialog(
+                                        context: context,
+                                        builder: (context) {
+                                          return AlertDialog(
+                                            title: Text('Validation Error'),
+                                            content: Text(
+                                                'Tempat konseling tidak boleh kosong.'),
+                                            actions: [
+                                              TextButton(
+                                                onPressed: () {
+                                                  Navigator.pop(context);
+                                                },
+                                                child: Text('OK'),
+                                              ),
+                                            ],
+                                          );
+                                        },
+                                      );
+                                      return;
+                                    }
+
+                                    if (_pesan.text.isEmpty) {
+                                      showDialog(
+                                        context: context,
+                                        builder: (context) {
+                                          return AlertDialog(
+                                            title: Text('Validation Error'),
+                                            content: Text(
+                                                'Topik pembicaraan tidak boleh kosong.'),
+                                            actions: [
+                                              TextButton(
+                                                onPressed: () {
+                                                  Navigator.pop(context);
+                                                },
+                                                child: Text('OK'),
+                                              ),
+                                            ],
+                                          );
+                                        },
+                                      );
+                                      return;
+                                    }
+
+                                    final String? bearerToken =
+                                        await getBearerToken();
+
+                                    if (bearerToken == null) {
+                                      print('Bearer token is missing or null');
+                                      return;
+                                    }
+
+                                    final headers = {
+                                      'Content-Type': 'application/json',
+                                      'Accept': 'application/json',
+                                      'Authorization': 'Bearer $bearerToken',
+                                    };
+
+                                    final Map<String, dynamic> requestData = {
+                                      'id_layanan': selectedJenisLayananId,
+                                      'tempat': _tempat.text,
+                                      'pesan': _pesan.text,
+                                      'jenis_karir': selectedJenisKarir,
+                                      'jam_mulai': DateFormat('HH:mm')
+                                          .format(selectedTime!),
+                                      'tanggal_konseling':
+                                          DateFormat('yyyy-MM-dd')
+                                              .format(selectedDate!),
+                                    };
+
+                                    if (selectedSiswaIds.isNotEmpty) {
+                                      requestData['teman'] =
+                                          json.encode(selectedSiswaIds);
+                                    }
+
+                                    final response = await http.post(
+                                      Uri.parse(
+                                          'http://effective-ampland.gl.at.ply.gg:7440/api/store'),
+                                      headers: headers,
+                                      body: json.encode(requestData),
+                                    );
+
+                                    if (response.statusCode == 201) {
+                                      showDialog(
+                                        context: context,
+                                        builder: (context) {
+                                          return AlertDialog(
+                                            title: Text('Success'),
+                                            content: Text(
+                                                'Data successfully sent to the server.'),
+                                            actions: [
+                                              TextButton(
+                                                onPressed: () {
+                                                  Navigator.pop(context);
+                                                  // Navigasi ke halaman HistoryPage
+                                                  Navigator.of(context).push(
+                                                    MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          Layanan(),
+                                                    ),
+                                                  );
+                                                },
+                                                child: Text('OK'),
+                                              ),
+                                            ],
+                                          );
+                                        },
+                                      );
+                                    } else {
+                                      print(
+                                          'Failed to send data. Status code: ${response.statusCode}');
+                                    }
+                                  },
+                                  style: ElevatedButton.styleFrom(
+                                    primary: Color.fromARGB(255, 255, 195, 3),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(15),
+                                    ),
                                   ),
-                                  child: Text('SUBMIT'),
+                                  child: Padding(
+                                    padding: EdgeInsets.symmetric(
+                                      horizontal: constraints.maxWidth * 0.09,
+                                      vertical: constraints.maxHeight * 0.02,
+                                    ),
+                                    child: Text('SUBMIT'),
+                                  ),
                                 ),
-                              ),
+                              ],
                             ),
                             SizedBox(height: constraints.maxHeight * 0.07),
                           ],

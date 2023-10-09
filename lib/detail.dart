@@ -147,7 +147,7 @@ class _DetailPageState extends State<DetailPage> {
                             borderRadius: BorderRadius.circular(10.0),
                           ),
                         ),
-                        child: Text('SUBMIT'),
+                        child: Text('Cancel'),
                       ),
                     ),
                   ],
