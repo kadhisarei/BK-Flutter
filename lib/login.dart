@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:bk_flutter/home.dart';
+import 'package:bk_flutter/home2.dart';
 import 'package:bk_flutter/master.dart';
 import 'package:bk_flutter/method/api.dart';
 import 'package:flutter/material.dart';
@@ -39,7 +40,7 @@ class _LoginPageState extends State<LoginPage> {
       );
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(
-          builder: (context) => HistoryPage(),
+          builder: (context) => Homes(),
         ),
       );
     }
@@ -48,6 +49,7 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       backgroundColor: Color.fromARGB(255, 255, 255, 255),
       body: LayoutBuilder(
         builder: (context, constraints) {
